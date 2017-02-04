@@ -57,10 +57,8 @@ public class Krest extends View implements View.OnTouchListener {
                 startPointX = x;
                 startPointY = y;
                 matrix.reset();
-                Log.d("Rott ", String.valueOf(startDegree - eventDegree));
                 matrix.setRotate(eventDegree - startDegree, rectF.centerX(), rectF.centerY());
                 startDegree = eventDegree;
-                Log.d("Rott!!! ", String.valueOf(startDegree));
                 path.transform(matrix);
                 break;
         }
@@ -80,10 +78,8 @@ public class Krest extends View implements View.OnTouchListener {
 
         double delta_x = (x1 - x2);
         double delta_y = (y1 - y2);
-        double radians = Math.atan2(delta_y, delta_x);
-        Log.d("Radians: ", String.valueOf(radians));
+        double radians = Math.atan2(delta_y, delta_x);//
         double degrees = Math.toDegrees(radians);
-        Log.d("Degrees: ", String.valueOf(degrees));
         return (float) degrees;
     }
 }
