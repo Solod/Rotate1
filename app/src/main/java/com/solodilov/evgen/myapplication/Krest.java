@@ -6,7 +6,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -21,13 +20,14 @@ public class Krest extends View implements View.OnTouchListener {
     RectF rectF;
     Matrix matrix;
     private float startDegree;
+    private float rotate;
 
     public Krest(Context context) {
         super(context);
         p = new Paint();
         p.setStrokeWidth(3);
         p.setStyle(Paint.Style.STROKE);
-        rectF = new RectF(300, 300, 600, 600);
+        rectF = new RectF(300, 300, 600, 800);
         path = new Path();
         matrix = new Matrix();
         setOnTouchListener(this);
@@ -36,30 +36,28 @@ public class Krest extends View implements View.OnTouchListener {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawARGB(80, 102, 204, 255);
+        path.reset();
+        path.addRect(rectF, Path.Direction.CW);
+        matrix.reset();
+        matrix.setRotate(rotate, rectF.centerX(), rectF.centerY());
+
+        path.transform(matrix);
         canvas.drawPath(path, p);
     }
 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        x = event.getX();
-        y = event.getY();
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                startPointX = x;
-                startPointY = y;
                 startDegree = getDegree(rectF, event);
-                path.reset();
-                path.addRect(rectF, Path.Direction.CW);
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 float eventDegree = getDegree(event);
-                startPointX = x;
-                startPointY = y;
-                matrix.reset();
-                matrix.setRotate(eventDegree - startDegree, rectF.centerX(), rectF.centerY());
+                rotate = eventDegree - startDegree;
                 startDegree = eventDegree;
-                path.transform(matrix);
                 break;
         }
         invalidate();
