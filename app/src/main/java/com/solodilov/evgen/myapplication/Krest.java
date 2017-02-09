@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,6 +18,7 @@ public class Krest extends View implements View.OnTouchListener {
     RectF rectF;
     Matrix matrix;
     private float startDegree;
+    private float endDegree;
     private float rotate;
 
     public Krest(Context context) {
@@ -38,7 +40,6 @@ public class Krest extends View implements View.OnTouchListener {
         path.addRect(rectF, Path.Direction.CW);
         matrix.reset();
         matrix.setRotate(rotate, rectF.centerX(), rectF.centerY());
-
         path.transform(matrix);
         canvas.restore();
         canvas.drawPath(path, p);
@@ -51,12 +52,13 @@ public class Krest extends View implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 startDegree = getDegree(rectF, event);
-
                 break;
             case MotionEvent.ACTION_MOVE:
                 float eventDegree = getDegree(event);
-                rotate = eventDegree - startDegree;
-
+                rotate = endDegree - startDegree + eventDegree;
+                break;
+            case MotionEvent.ACTION_UP:
+                endDegree = rotate;
                 break;
         }
         invalidate();
